@@ -1,18 +1,23 @@
-require('dotenv').config()
-const connectDB = require('./config/conf.config')
-const express = require('express')
+require('dotenv').config();
+const connectDB = require('./config/conf.config');
+const express = require('express');
 const cors = require('cors');
-
-const db = connectDB();
 
 const app = express();
 
-app.use(cors())
+// CORS production
+app.use(cors({
+    origin: "https://moctarniang172.github.io",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
 
 app.use(express.json());
 
+// DB
+connectDB();
+
+// Routes
 app.use('/api', require('./routes'));
-
-
 
 module.exports = app;
