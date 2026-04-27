@@ -56,5 +56,6 @@ exports.login = async (data) => {
         { expiresIn: '7d' }
     );
 
-    return { user: userconnecter, token };
+    return { token: token, id: userconnecter._id, nom: userconnecter.nom, // On sort le nom de l'objet user 
+             email: userconnecter.email};
 };
