@@ -43,9 +43,7 @@ const verifyCode = async (email, code) => {
   if (!user) throw new Error("Utilisateur introuvable");
 
   const hashedCode = crypto
-    .createHash("sha256")
-    .update(code)
-    .digest("hex");
+    .createHash("sha256").update(code).digest("hex");
 
   if (user.resetAttempts >= 5) {
     throw new Error("Trop de tentatives");
