@@ -75,7 +75,6 @@ exports.getProfil = async (userId) => {
 exports.updateProfil = async (userId, data, file) => {
     const { nom, email } = data;
 
-    // Si email modifié, vérifier qu'il n'existe pas déjà
     if (email) {
         const emailExiste = await user.findOne({ email, _id: { $ne: userId } });
         if (emailExiste) {
@@ -84,14 +83,16 @@ exports.updateProfil = async (userId, data, file) => {
     }
 
     const champs = {};
-    if (nom) champs.nom = nom;
-    if (email) champs.email = email;
-    if (file) champs.images = file.path;  // Cloudinary
+
+    // On met à jour seulement si la valeur est envoyée et non vide
+    if (nom && nom.trim() !== "") champs.nom = nom;
+    if (email && email.trim() !== "") champs.email = email;
+    if (file) champs.images = file.path;
 
     const userMisAJour = await user.findByIdAndUpdate(
         userId,
         champs,
-        { new: true }  // retourne le document mis à jour
+        { new: true }
     ).select('-password -resetToken -resetTokenExpiry -resetCode -resetCodeExpire -resetAttempts');
 
     return userMisAJour;
