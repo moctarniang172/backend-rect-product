@@ -27,12 +27,44 @@ const forgotPasswordService = async (email) => {
   await user.save();
 
   await transporter.sendMail({
-    to: user.email,
-    subject: 'Code de réinitialisation',
-    html: `<h2>${code}</h2>`
-  });
+  to: user.email,
+  subject: 'Code de réinitialisation de mot de passe',
+  html: `
+    <div style="font-family: Arial, sans-serif; background-color:#f4f4f4; padding:20px;">
+      <div style="max-width:500px; margin:auto; background:#ffffff; padding:20px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
 
-  return { message: 'Code envoyé par email' };
+        <h2 style="text-align:center; color:#333;">Réinitialisation de mot de passe</h2>
+
+        <p style="font-size:16px; color:#555;">
+          Bonjour,
+        </p>
+
+        <p style="font-size:16px; color:#555;">
+          Voici votre code de réinitialisation :
+        </p>
+
+        <div style="text-align:center; margin:20px 0;">
+          <span style="display:inline-block; font-size:24px; letter-spacing:5px; font-weight:bold; background:#f0f0f0; padding:10px 20px; border-radius:8px; color:#000;">
+            ${code}
+          </span>
+        </div>
+
+        <p style="font-size:14px; color:#777;">
+          Ce code est valable pour une durée limitée. Ne le partagez avec personne.
+        </p>
+
+        <hr style="margin:20px 0;" />
+
+        <p style="font-size:12px; color:#aaa; text-align:center;">
+          © ${new Date().getFullYear()} Votre Application. Tous droits réservés.
+        </p>
+
+      </div>
+    </div>
+  `
+});
+
+return { message: 'Code envoyé par email' };
 };
 
 
