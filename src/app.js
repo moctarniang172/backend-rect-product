@@ -5,6 +5,9 @@ const cors = require('cors');
 
 const app = express();
 
+// CORS developpement
+// app.use(cors())
+
 // CORS production
 app.use(cors({
     origin: "https://moctarniang172.github.io",
