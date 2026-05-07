@@ -1,9 +1,16 @@
 const user = require('../models/user');
 const bycrypt = require('bcrypt');
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+
+const generetokenvalidation = ()=>{
+    return crypto.randomBytes(32).toString("hex");
+
+}
 
 // INSCRIPTION
 exports.inscription = async (data, file) => {
+    const tokenvalidate = generetokenvalidation();
     const { nom, email, password } = data;
 
     if (!nom || !email || !password) {
@@ -21,12 +28,30 @@ exports.inscription = async (data, file) => {
     const creer = await user.create({
         nom,
         email,
-        images: file ? file.path : null,  // ✅ corrigé
-        password: hashpassword
+        images: file ? file.path : null,
+        password: hashpassword,
+        isActive: false,
+        activationToken: tokenvalidate
     });
 
-    return creer;
+    // 👉 ici normalement tu envoies email
+    return { user: creer, token: tokenvalidate };
 };
+   exports.activecompte = async (token) => {
+    const result = await user.findOne({ activationToken: token });
+
+    if (!result) throw new Error("token invalide");
+
+    result.isActive = true;
+    result.activationToken = null;
+
+    await result.save();
+
+    return result;
+};
+
+
+
 // LOGIN
 exports.login = async (data) => {
     const { email, password } = data;
@@ -40,6 +65,9 @@ exports.login = async (data) => {
     if (!userconnecter) {
         throw new Error("email n'existe pas");
     }
+      if (!userconnecter.isActive) {
+    throw new Error("Veuillez activer votre compte");
+}
 
     const verifierPassword = await bycrypt.compare(
         password,
@@ -49,6 +77,7 @@ exports.login = async (data) => {
     if (!verifierPassword) {
         throw new Error("mot de passe incorrect");
     }
+  
 
     const token = jwt.sign(
         { id: userconnecter._id },

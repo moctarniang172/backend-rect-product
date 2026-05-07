@@ -10,7 +10,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: null
     },
+  
     password: String,
+
+      isActive: {
+    type: Boolean,
+    default: false
+    },
+    activationToken: String,
+    
     resetToken: {
         type: String,
         default: null

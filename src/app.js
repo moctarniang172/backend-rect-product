@@ -6,14 +6,14 @@ const cors = require('cors');
 const app = express();
 
 // CORS developpement
-// app.use(cors())
+app.use(cors())
 
 // CORS production
-app.use(cors({
-    origin: "https://moctarniang172.github.io",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
-}));
+// app.use(cors({
+//     origin: "https://moctarniang172.github.io",
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     credentials: true
+// }));
 
 app.use(express.json());
 app.get('/', (req,res)=>{

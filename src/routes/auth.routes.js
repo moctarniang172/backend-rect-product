@@ -16,6 +16,9 @@ const handleUpload = (req, res, next) => {
 
 router.post('/inscription',upload.single("images"), authcontroller.register);
 
+router.get("/activate/:token", authcontroller.acitvecompte);
+
+
 router.post('/connexion', authcontroller.login);
 
 
